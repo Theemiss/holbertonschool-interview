@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+""" Module that containes "canUnlockAll" function"""
 
 
 def canUnlockAll(boxes):
@@ -22,7 +23,6 @@ def canUnlockAll(boxes):
 
     if (len(boxes) == 0):
         return False
-
     keysbox = [0]
     for key in keysbox:
         for j in boxes[key]:
