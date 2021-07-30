@@ -17,6 +17,12 @@ def canUnlockAll(boxes):
         The first box boxes[0] is unlocked
         Return True if all boxes can be opened, else return False
     """
+    if (type(boxes) is not list):
+        return False
+
+    if (len(boxes) == 0):
+        return False
+
     keysbox = [0]
     for key in keysbox:
         for j in boxes[key]:
