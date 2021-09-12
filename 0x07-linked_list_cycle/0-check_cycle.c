@@ -6,24 +6,22 @@
  */
 int check_cycle(listint_t *list)
 {
-	void *array[1024];
-	listint_t *temp;
-	int i = 0;
-	int z = 0;
+
+	listint_t *temp, *check;
+
+	if (!list)
+		return (0);
 
 	temp = list;
-	while (temp)
+	check = list->next;
+	while (temp && check && check->next)
 	{
 		temp = temp->next;
-		array[i] = &temp;
-		i++;
-		for (z = 0; z < i; z++)
-		{
-			if (&temp == array[i])
-			{
-				return (1);
-			}
-		}
+		check = check->next->next;
+
+		if (check == temp)
+			return (1);
 	}
 	return (0);
 }
+
