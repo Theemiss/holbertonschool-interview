@@ -1,38 +1,47 @@
 #!/usr/bin/python3
-"""Log parsing module"""
+""" script that reads stdin line by line and computes metrics """
 
+if __name__ == '__main__':
 
-import sys
+    import sys
 
+    def print_results(statusCodes, fileSize):
+        """ Print statistics """
+        print("File size: {:d}".format(fileSize))
+        for statusCode, times in sorted(statusCodes.items()):
+            if times:
+                print("{:s}: {:d}".format(statusCode, times))
 
-records = {
-    "200": 0,
-    "301": 0,
-    "400": 0,
-    "401": 0,
-    "403": 0,
-    "404": 0,
-    "405": 0,
-    "500": 0
-}
-file_size = 0
-try:
-    for time, line in enumerate(sys.stdin, 1):
-        token = line.split()
-        if len(token) > 2:
-            status_code = token[len(token) - 2]
-            file_size += int(token[len(token) - 1])
-            if status_code in records:
-                records[str(status_code)] += 1
-        if time % 10 == 0:
-            print("File size: {}".format(file_size))
-            for sc in sorted(records):
-                if records[sc] > 0:
-                    print("{}: {}".format(sc, records[sc]))
-except KeyboardInterrupt:
-    pass
-finally:
-    print("File size: {}".format(file_size))
-    for sc in sorted(records):
-        if records[sc] > 0:
-            print("{}: {}".format(sc, records[sc]))
+    statusCodes = {"200": 0,
+                   "301": 0,
+                   "400": 0,
+                   "401": 0,
+                   "403": 0,
+                   "404": 0,
+                   "405": 0,
+                   "500": 0
+                   }
+    fileSize = 0
+    n_lines = 0
+
+    try:
+        """ Read stdin line by line """
+        for line in sys.stdin:
+            if n_lines != 0 and n_lines % 10 == 0:
+                """ After every 10 lines, print from the beginning """
+                print_results(statusCodes, fileSize)
+            n_lines += 1
+            data = line.split()
+            try:
+                """ Compute metrics """
+                statusCode = data[-2]
+                if statusCode in statusCodes:
+                    statusCodes[statusCode] += 1
+                fileSize += int(data[-1])
+            except Exception:
+                pass
+        print_results(statusCodes, fileSize)
+    except KeyboardInterrupt:
+        """ Keyboard interruption, print from the beginning """
+        print_results(statusCodes, fileSize)
+        raise
