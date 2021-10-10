@@ -14,7 +14,7 @@ records = {
     "404": 0,
     "405": 0,
     "500": 0
-    }
+}
 file_size = 0
 try:
     for time, line in enumerate(sys.stdin, 1):
