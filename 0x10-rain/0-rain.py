@@ -2,6 +2,8 @@
 """
 rain module
 """
+
+
 def rain(walls):
     """
     Given a list of non-negative integers representing
