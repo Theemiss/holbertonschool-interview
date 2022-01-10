@@ -2,8 +2,6 @@
 """
 n queen solver
 """
-
-
 from sys import argv
 
 
