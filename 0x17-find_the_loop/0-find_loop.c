@@ -2,7 +2,7 @@
 /**
 * find_listint_loop - find the loop in single linked list
 * @head: the head of the single linked list
-* Return : the node which the loop occured
+* Return: the node which the loop occured
 */
 
 listint_t *find_listint_loop(listint_t *head)
