@@ -1,26 +1,31 @@
 #include "binary_trees.h"
 /**
-*
-*
-*
+* heap_extract -  extracts the root node of a Max Binary Heap:
+* @root: binary tree
+* Return: int
 */
 int heap_extract(heap_t **root)
 {
-    int value;
-    if(!*root)
-        return (0);
-    value = (*root)->n;
-    if (!(*root)->left)
+	int value;
+
+	if (!*root)
+		return (0);
+	value = (*root)->n;
+	if (!(*root)->left)
 	{
 		value = (*root)->n;
 		free(*root);
 		*root = NULL;
 		return (value);
 	}
-    extract(*root);
-    return (value);
+	extract(*root);
+	return (value);
 
 }
+/**
+* extract - extract the root node recursevly
+* @tree: node in tree
+*/
 void extract(heap_t *tree)
 {
 	heap_t *sub_max, *right_max = NULL;
@@ -44,9 +49,14 @@ void extract(heap_t *tree)
 	else
 		extract(sub_max);
 }
+/**
+* find_max - find_max
+* @tree: node in tree
+* Return: max in tree
+*/
 heap_t *find_max(heap_t *tree)
 {
-    heap_t *curr_max, *left_max, *right_max;
+	heap_t *curr_max, *left_max, *right_max;
 
 	if (!tree->left)
 		return (tree);
