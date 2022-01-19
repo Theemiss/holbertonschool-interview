@@ -22,6 +22,9 @@ typedef struct binary_tree_s heap_t;
 
 void binary_tree_print(const binary_tree_t *);
 int heap_extract(heap_t **root);
-void extract(heap_t *root);
-heap_t *find_max(heap_t *tree);
+int tree_depth(heap_t *root);
+heap_t *find_leaf(heap_t *root);
+void swap_nodes(heap_t *parent, heap_t *child);
+void siftDown(heap_t **parent);
+
 #endif /* _BINARY_TREES_H_ */

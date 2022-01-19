@@ -1,77 +1,118 @@
 #include "binary_trees.h"
 /**
-* heap_extract -  extracts the root node of a Max Binary Heap:
-* @root: binary tree
-* Return: int
-*/
+ * heap_extract -  extracts the root node of a Max Binary Heap:
+ * @root: binary tree
+ * Return: int
+ */
 int heap_extract(heap_t **root)
 {
-	int value;
 
-	if (!*root)
+	heap_t *leaf, *tmp;
+	int rootValue;
+
+	if ((*root) == NULL)
 		return (0);
-	value = (*root)->n;
-	if (!(*root)->left)
+	rootValue = (*root)->n;
+	if (!(*root)->left && !(*root)->right)
 	{
-		value = (*root)->n;
-		free(*root);
+		free((*root));
 		*root = NULL;
-		return (value);
+		return (rootValue);
 	}
-	extract(*root);
-	return (value);
-
+	leaf = find_leaf((*root));
+	if (leaf == NULL)
+		return (0);
+	tmp = (*root);
+	if (tmp->left)
+	{
+		tmp->left->parent = leaf;
+		leaf->left = tmp->left;
+	}
+	if (tmp->right)
+	{
+		tmp->right->parent = leaf;
+		leaf->right = tmp->right;
+	}
+	if (leaf->parent->left && leaf->parent->left == leaf)
+		leaf->parent->left = NULL;
+	else if (leaf->parent->right && leaf->parent->right == leaf)
+		leaf->parent->right = NULL;
+	leaf->parent = tmp->parent;
+	(*root) = leaf;
+	free(tmp);
+	siftDown(root);
+	return (rootValue);
 }
 /**
-* extract - extract the root node recursevly
-* @tree: node in tree
-*/
-void extract(heap_t *tree)
+ * tree_depth - Used the detph of the heap
+ * @root: First element in the heap.
+ * Return: returns the depth of the heap.
+ **/
+int tree_depth(heap_t *root)
 {
-	heap_t *sub_max, *right_max = NULL;
+	int left = 0;
+	int right = 0;
 
-	if (!tree->left)
-		return;
-	sub_max = find_max((tree)->left);
-	if (tree->right)
-		right_max = find_max(tree->right);
-	if (right_max && right_max->n > sub_max->n)
-		sub_max = right_max;
-	tree->n = sub_max->n;
-	if (!sub_max->left)
-	{
-		if (sub_max->parent && sub_max->parent->left == sub_max)
-			sub_max->parent->left = NULL;
-		if (sub_max->parent && sub_max->parent->right == sub_max)
-			sub_max->parent->right = NULL;
-		free(sub_max);
-	}
+	if (root == NULL)
+		return (0);
+
+	left = tree_depth(root->left);
+	right = tree_depth(root->right);
+
+	if (left > right)
+		return (left + 1);
 	else
-		extract(sub_max);
+		return (right + 1);
+}
+
+/**
+ * find_leaf - Finds last element of the last level in the heap.
+ * @root: Pointer to first element in the heap.
+ * Return: return pointer to the last element.
+ **/
+heap_t *find_leaf(heap_t *root)
+{
+	if (root == NULL)
+		return (NULL);
+	if (!root->right && !root->left)
+		return (root);
+
+	if (tree_depth(root->left) > tree_depth(root->right))
+		return (find_leaf(root->left));
+	if (tree_depth(root->right) > tree_depth(root->left))
+		return (find_leaf(root->right));
+	return (find_leaf(root->right));
 }
 /**
-* find_max - find_max
-* @tree: node in tree
-* Return: max in tree
-*/
-heap_t *find_max(heap_t *tree)
+ * swap_nodes - Used to swap elements values
+ * @parent: First element for swap
+ * @child: Second element for swap
+ **/
+void swap_nodes(heap_t *parent, heap_t *child)
 {
-	heap_t *curr_max, *left_max, *right_max;
+	int tmp = child->n;
 
-	if (!tree->left)
-		return (tree);
-	left_max = find_max(tree->left);
-	if (left_max->n > tree->n)
-		curr_max = left_max;
-	else
-		curr_max = tree;
-	if (tree->right)
+	child->n = parent->n;
+	parent->n = tmp;
+}
+/**
+ * siftDown - Used to repair the heap
+ * @parent: First element of the heap
+ **/
+void siftDown(heap_t **parent)
+{
+	heap_t *target = (*parent);
+
+	while ((target->left && target->n < target->left->n) ||
+		   (target->right && target->n < target->right->n))
 	{
-		right_max = find_max(tree->right);
-		if (right_max->n > curr_max->n)
-			curr_max = right_max;
-		else
-			curr_max = tree;
+		if (target->right && target->left)
+			target = target->left->n > target->right->n ? target->left : target->right;
+		if (target->right && target->right->n > target->n)
+			target = target->right;
+		else if (target->left && target->left->n > target->n)
+			target = target->left;
+
+		swap_nodes(target->parent, target);
 	}
-	return (curr_max);
 }
