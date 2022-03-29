@@ -58,12 +58,15 @@ void radix_sort(int *array, size_t size)
 {
 
 	int i;
+	int max;
+
+	max = find_max(array, size);
 
 	if (array == NULL || size < 1)
 	{
 		return;
 	}
-	for (i = 1; i < 100; i *= 10)
+	for (i = 1; max / i > 0; i *= 10)
 	{
 		radix_count_sort(array, size, i);
 		print_array(array, size);
