@@ -8,13 +8,17 @@ def island_perimeter(grid):
     """
     calculate the perimeter of a grid island
     """
-    island_surface = 0
-    for i in range(0, len(grid), 1):
-        for j in range(0, len(grid), 1):
-            if grid[i][j] == 1:
-                island_surface += 1
-
-    al = island_surface - 2
-
-    sur = al * 2 + (island_surface - al) * 3
-    return sur
+    row, col = len(grid), len(grid[0])
+    directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+    perimeter = 0
+    for r in range(row):
+        for c in range(col):
+            adjacent_land = 0
+            if grid[r][c] == 1:
+                for d in directions:
+                    ro = r + d[0]
+                    co = c + d[1]
+                    if 0 <= ro < row and 0 <= co < col and grid[ro][co] == 1:
+                        adjacent_land += 1
+    perimeter += (4 - adjacent_land)
+    return perimeter
