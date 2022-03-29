@@ -28,6 +28,8 @@ void radix_sort(int *array, size_t size)
 	size_t bucket[10][10], bucket_cnt[10];
 	size_t i, j, k, r, NOP = 0, divisor = 1, lar, pass;
 
+	if (array == NULL && size == 0)
+		return;
 	lar = find_max(array, size);
 	while (lar > 0)
 	{
