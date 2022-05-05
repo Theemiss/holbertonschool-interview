@@ -7,28 +7,22 @@
  */
 int regex_match(char const *str, char const *pattern)
 {
-    if (*pattern == '\0' && *str == '\0')
-        return (1);
-    if (*pattern == '\0' || *str == '\0')
-        return (0);
-    if (*pattern == '.' && *(pattern + 1) == '*' && *(pattern + 2) == '\0')
-        return (1);
-    if (*(pattern + 1) == '*')
-    {
-        if (*(pattern) == '.')
-        {
-            return (regex_match(str, pattern + 2) || regex_match(str + 1, pattern));
-        }
-        if (*(pattern) != *str)
-            return (regex_match(str, pattern + 2));
-        if (*(pattern) == *str && *(str + 1) == *str)
-            return (regex_match(str + 1, pattern));
-        if (*(str + 1) != *str)
-            return (regex_match(str + 1, pattern + 2));
-    }
-    if (*pattern == *str || *pattern == '.')
-    {
-        return (regex_match(str + 1, pattern + 1));
-    }
-    return (0);
+	int dot = 0;
+	int asterisk = 0;
+
+	if (!str || !pattern)
+		return (0);
+
+	dot = *str && (*str == *pattern || *pattern == '.');
+	asterisk = *(pattern + 1) == '*';
+
+	if (!*str && !asterisk)
+		return (*pattern ? 0 : 1);
+	else if (dot && asterisk)
+		return (regex_match(str + 1, pattern) || regex_match(str, pattern + 2));
+	else if (dot && !asterisk)
+		return (regex_match(str + 1, pattern + 1));
+	else if (asterisk)
+		return (regex_match(str, pattern + 2));
+	return (0);
 }
