@@ -8,6 +8,7 @@ def CofBinom(n, k):
     """
     Binomial coefficient
     C(line, i)   = line! / ( (line-i)! * i! )
+    line par line
     """
     res = 1
     if (k > n - k):
