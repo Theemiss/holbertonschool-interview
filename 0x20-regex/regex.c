@@ -15,7 +15,7 @@ int regex_match(char const *str, char const *pattern)
         return (1);
     if (*(pattern + 1) == '*')
     {
-        if (*(pattern) == '*')
+        if (*(pattern) == '.')
         {
             return (regex_match(str, pattern + 2) || regex_match(str + 1, pattern));
         }
