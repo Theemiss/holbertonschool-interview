@@ -3,47 +3,30 @@
 Prime Game
 """
 
-
-def Prime(num):
-    '''
-    if a number is prime Return True Otherwise False
-    '''
-    if num > 1:
-        for i in range(2, int(num/2)+1):
-            if (num % i) == 0:
-                return False
-        return True
-    else:
-        return False
-
-
 def isWinner(x, nums):
     """
     Prime Game
     """
-    rounds = {
-        "Maria": 0,
-        "Ben": 0
-    }
-    t = 0
-    for i in range(x):
-        choices = [i for i in range(1, nums[i] + 1)]
-        for j in choices:
-            if (Prime(j)):
-                for k in choices:
-                    if k % j == 0:
-                        choices.remove(k)
-                    t = t + 1 % 2
-        if t == 0:
-            rounds["Maria"] += 1
-            t = 1
-        else:
-            rounds["Ben"] += 1
-            t = 0
-
-    if rounds["Maria"] > rounds["Ben"]:
-        return "Maria"
-    elif rounds["Maria"] < rounds["Ben"]:
-        return "Ben"
-    else:
+    if not nums or x < 1:
         return None
+    max_numbers = max(nums)
+    filters = [True for _ in range(max(max_numbers + 1, 2))]
+    for i in range(2, int(pow(max_numbers, 0.5)) + 1):
+        if not filters[i]:
+            continue
+        for j in range(i * i, max_numbers + 1, i):
+            filters[j] = False
+    filters[0] = filters[1] = False
+    c = 0
+    for i in range(len(filters)):
+        if filters[i]:
+            c += 1
+        filters[i] = c
+    player_number_one = 0
+    for max_numbers in nums:
+        player_number_one += filters[max_numbers] % 2 == 1
+    if player_number_one * 2 == len(nums):
+        return None
+    if player_number_one * 2 > len(nums):
+        return "Maria"
+    return "Ben"
