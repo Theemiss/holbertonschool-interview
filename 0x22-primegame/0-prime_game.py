@@ -42,8 +42,8 @@ def isWinner(x, nums):
             t = 0
 
     if rounds["Maria"] > rounds["Ben"]:
-        return "Ben"
-    elif rounds["Maria"] < rounds["Ben"]:
         return "Maria"
+    elif rounds["Maria"] < rounds["Ben"]:
+        return "Ben"
     else:
         return None
